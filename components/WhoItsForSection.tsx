@@ -36,30 +36,31 @@ export function WhoItsForSection() {
           Your Back
         </h2>
 
-        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="grid w-full grid-cols-1 gap-y-10 gap-x-6 pt-6 md:grid-cols-3">
           {items.map((item, i) => (
             <article
               key={i}
-              className="flex flex-col items-center rounded-[20px] text-center"
+              className="relative flex flex-col items-center overflow-visible rounded-[20px] text-center"
               style={{
                 background: "#fff",
                 boxShadow: "0 8px 30px -10px rgba(11,31,77,0.12)",
-                padding: "24px 24px 30px",
+                padding: "28px 24px 30px",
               }}
             >
               <div
-                className="mb-5 flex w-full items-center justify-center rounded-[14px] bg-[#FEFEFE]"
-                style={{ height: 140 }}
+                className="relative z-[1] -mt-12 mb-3 flex w-full items-end justify-center md:-mt-14"
+                style={{ height: 200 }}
               >
                 <Image
                   src={item.image}
                   alt=""
-                  width={300}
-                  height={220}
-                  className="h-full w-auto object-contain"
+                  width={360}
+                  height={260}
+                  className="h-full max-h-[210px] w-auto origin-bottom scale-[1.12] object-contain object-bottom [filter:drop-shadow(0_14px_28px_rgba(11,31,77,0.16))] md:max-h-[220px] md:scale-[1.16]"
                 />
               </div>
               <p
+                className="relative z-[1]"
                 style={{
                   fontSize: 14,
                   lineHeight: "21px",

@@ -1,8 +1,101 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SOCIAL } from "@/lib/site-content";
+
+type Toast = { kind: "success" | "error"; message: string };
+
+function ContactToast({
+  toast,
+  onClose,
+}: {
+  toast: Toast;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (toast.kind !== "success") return;
+    const id = window.setTimeout(onClose, 5000);
+    return () => window.clearTimeout(id);
+  }, [toast.kind, onClose]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const isSuccess = toast.kind === "success";
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      role="presentation"
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-[#0a0640]/55 backdrop-blur-[2px] transition-opacity"
+        aria-label="Close notification"
+        onClick={onClose}
+      />
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="contact-toast-title"
+        aria-describedby="contact-toast-desc"
+        className="relative w-full max-w-[400px] rounded-2xl px-6 py-6 shadow-cta transition-all duration-200 ease-out"
+        style={{
+          background: isSuccess ? "#fff" : "#1a1030",
+          color: isSuccess ? "#1A0FD4" : "#fff",
+          border: isSuccess
+            ? "1px solid rgba(26,15,212,0.12)"
+            : "1px solid rgba(255,255,255,0.12)",
+        }}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg text-[18px] leading-none opacity-50 transition-opacity hover:opacity-100"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <div
+          className="mb-3 flex h-11 w-11 items-center justify-center rounded-full text-[20px]"
+          style={{
+            background: isSuccess ? "rgba(26,15,212,0.1)" : "rgba(255,80,80,0.2)",
+          }}
+          aria-hidden
+        >
+          {isSuccess ? "✓" : "!"}
+        </div>
+        <h4
+          id="contact-toast-title"
+          className="pr-8 text-[17px] font-extrabold tracking-tight"
+        >
+          {isSuccess ? "Message sent" : "Could not send"}
+        </h4>
+        <p
+          id="contact-toast-desc"
+          className="mt-2 text-[14px] leading-relaxed"
+          style={{ color: isSuccess ? "rgba(26,15,212,0.75)" : "rgba(255,255,255,0.85)" }}
+        >
+          {toast.message}
+        </p>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-5 w-full rounded-xl py-3 text-[14px] font-bold text-white transition-all duration-200 hover:-translate-y-px hover:brightness-110 active:translate-y-0 active:scale-[0.98]"
+          style={{ background: isSuccess ? "#1A0FD4" : "#c42b2b" }}
+        >
+          {isSuccess ? "Got it" : "Try again"}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function LinkedInIcon() {
   return (
@@ -27,11 +120,60 @@ const inputStyle: React.CSSProperties = {
   border: "1px solid rgba(26,15,212,0.18)",
 };
 
-export function ContactFooter() {
-  const [sent, setSent] = useState(false);
+function isFormComplete(name: string, email: string, message: string) {
+  const n = name.trim();
+  const e = email.trim();
+  const m = message.trim();
+  if (!n || !e || !m) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+}
 
-  function handleSend() {
-    setSent(true);
+export function ContactFooter() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [toast, setToast] = useState<Toast | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const formComplete = isFormComplete(name, email, message);
+
+  async function submitForm() {
+    setToast(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        setToast({
+          kind: "error",
+          message: data.error ?? "Something went wrong. Please try again.",
+        });
+        return;
+      }
+      setToast({
+        kind: "success",
+        message: "Thanks — we'll be in touch shortly.",
+      });
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch {
+      setToast({
+        kind: "error",
+        message: "Network error. Please check your connection and try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function onFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    void submitForm();
   }
 
   return (
@@ -40,6 +182,7 @@ export function ContactFooter() {
       className="rounded-t-[28px]"
       style={{ background: "#1A0FD4", color: "#fff" }}
     >
+      {toast && <ContactToast toast={toast} onClose={() => setToast(null)} />}
       <div className="mx-auto box-border grid w-full max-w-[min(100%,1340px)] grid-cols-1 gap-14 px-3 pb-10 pt-[72px] sm:px-4 lg:grid-cols-2 lg:gap-20 lg:px-5">
         {/* Left — pitch */}
         <div className="flex flex-col">
@@ -110,7 +253,7 @@ export function ContactFooter() {
         </div>
 
         {/* Right — Contact form */}
-        <div className="flex flex-col gap-5">
+        <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
           <h3
             className="font-extrabold"
             style={{ fontSize: 26, letterSpacing: "-0.4px", color: "#fff" }}
@@ -124,10 +267,16 @@ export function ContactFooter() {
             </label>
             <input
               id="cf-name"
+              name="name"
               type="text"
+              autoComplete="name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name here"
               className={inputClass}
               style={inputStyle}
+              disabled={loading}
             />
           </div>
 
@@ -137,10 +286,16 @@ export function ContactFooter() {
             </label>
             <input
               id="cf-email"
+              name="email"
               type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email here"
               className={inputClass}
               style={inputStyle}
+              disabled={loading}
             />
           </div>
 
@@ -150,28 +305,33 @@ export function ContactFooter() {
             </label>
             <textarea
               id="cf-msg"
+              name="message"
               rows={5}
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message here"
               className={`min-h-[120px] resize-y ${inputClass}`}
               style={inputStyle}
+              disabled={loading}
             />
           </div>
 
           <button
-            type="button"
-            onClick={handleSend}
-            className="mt-2 self-end rounded-xl px-8 py-3.5 text-[14.5px] font-bold text-white transition-opacity hover:opacity-90"
-            style={{ background: "#1208A8" }}
+            type="submit"
+            disabled={loading || !formComplete}
+            className={[
+              "mt-2 self-end rounded-xl px-8 py-3.5 text-[14.5px] font-bold text-white",
+              "transition-all duration-200 ease-out",
+              "disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none disabled:translate-y-0 disabled:scale-100",
+              formComplete && !loading
+                ? "bg-brand-blue-dark shadow-cta hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-[#2a18d4] hover:shadow-[0_14px_36px_-8px_rgba(0,0,0,0.4)] active:translate-y-0 active:scale-[0.98] active:shadow-cta"
+                : "bg-brand-blue-dark/70 opacity-80",
+            ].join(" ")}
           >
-            Send Message
+            {loading ? "Sending…" : "Send Message"}
           </button>
-
-          {sent && (
-            <p role="status" style={{ fontSize: 13, color: "rgba(255,255,255,0.85)" }}>
-              Thanks — we&rsquo;ll be in touch shortly.
-            </p>
-          )}
-        </div>
+        </form>
       </div>
 
       <div

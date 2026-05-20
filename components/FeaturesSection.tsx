@@ -47,15 +47,15 @@ export function FeaturesSection() {
               }}
             >
               <div
-                className="mb-6 flex w-full items-center justify-center"
-                style={{ height: 80 }}
+                className="mb-5 flex w-full items-center justify-center"
+                style={{ height: 100 }}
               >
                 <Image
                   src={f.src}
                   alt={f.title.replace(/\n/g, " ")}
-                  width={140}
-                  height={140}
-                  className="h-full w-auto object-contain"
+                  width={168}
+                  height={168}
+                  className="h-full w-auto max-h-[100px] object-contain"
                 />
               </div>
               <h3

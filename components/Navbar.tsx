@@ -21,9 +21,9 @@ export default function Navbar() {
           <Image
             src="/images/Hinza-Logo-blue.png"
             alt="Hinza"
-            width={200}
-            height={56}
-            className="h-9 w-auto md:h-10"
+            width={240}
+            height={68}
+            className="h-11 w-auto md:h-12"
             priority
           />
         </Link>
@@ -38,14 +38,14 @@ export default function Navbar() {
                   className="mx-6 inline-block"
                   style={{
                     width: 1,
-                    height: 18,
+                    height: 22,
                     background: "rgba(26,15,212,0.25)",
                   }}
                 />
               )}
               <Link
                 href={link.href}
-                className="text-[14px] font-semibold transition-opacity hover:opacity-70"
+                className="text-[16px] font-semibold transition-opacity hover:opacity-70"
                 style={{ color: "#1A0FD4", textDecoration: "none" }}
               >
                 {link.label}
