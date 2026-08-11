@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
-const portalDevOrigin =
-  process.env.PORTAL_DEV_ORIGIN ?? "http://localhost:3001";
+const portalOrigin =
+  process.env.PORTAL_ORIGIN ??
+  (process.env.VERCEL
+    ? "https://hinzawebsite-complain.vercel.app"
+    : "http://localhost:3001");
 
 const nextConfig: NextConfig = {
   // Avoids a known dev-only RSC / webpack issue on Windows (SegmentViewNode + missing *.js chunks).
@@ -17,16 +20,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Local parity with production: proxy /complain/* to the Hinza Public app (basePath=/complain).
+  // Proxy /complain/* to the intake app (basePath=/complain).
   async rewrites() {
     return [
       {
         source: "/complain",
-        destination: `${portalDevOrigin}/complain`,
+        destination: `${portalOrigin}/complain`,
       },
       {
         source: "/complain/:path*",
-        destination: `${portalDevOrigin}/complain/:path*`,
+        destination: `${portalOrigin}/complain/:path*`,
       },
     ];
   },

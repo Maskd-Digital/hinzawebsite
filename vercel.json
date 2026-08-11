@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/complain",
-      "destination": "https://hinza-qr-intake.vercel.app/complain"
+      "destination": "https://hinzawebsite-complain.vercel.app/complain"
     },
     {
       "source": "/complain/:path*",
-      "destination": "https://hinza-qr-intake.vercel.app/complain/:path*"
+      "destination": "https://hinzawebsite-complain.vercel.app/complain/:path*"
     }
   ]
 }
