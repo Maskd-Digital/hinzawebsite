@@ -1,0 +1,26 @@
+# A string used to distinguish different Supabase projects on the same host.
+project_id = "hinza-qr-intake"
+
+[api]
+enabled = true
+port = 54321
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[functions.resolve_intake_context]
+verify_jwt = false
+
+[functions.create_evidence_upload_url]
+verify_jwt = false
+
+[functions.submit_public_complaint]
+verify_jwt = false
+
+[functions.get_public_complaint_status]
+verify_jwt = false

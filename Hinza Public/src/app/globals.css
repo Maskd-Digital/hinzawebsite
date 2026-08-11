@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #081636;
+  --canvas: #eff4ff;
+  --primary: #0108b8;
+  --link: #2563eb;
+  --alert: #ff4242;
+  --status-open: #ff9742;
+  --status-resolved: #0fb200;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-canvas: var(--canvas);
+  --color-primary: var(--primary);
+  --color-link: var(--link);
+  --color-alert: var(--alert);
+  --font-sans: var(--font-plus-jakarta-sans);
+}
+
+body {
+  font-family: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  color: #081636;
+  background: #eff4ff;
+}
+
+.page-shell {
+  background: #eff4ff;
+  min-height: 100dvh;
+}
+
+/* Blue-tinted brand elevation */
+.shadow-hinza {
+  box-shadow:
+    0 4px 6px -1px rgba(37, 99, 235, 0.25),
+    0 2px 4px -2px rgba(37, 99, 235, 0.25);
+}
+
+.shadow-hinza-strong {
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.35);
+}
+
+.shadow-hinza-inset {
+  box-shadow: inset 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary {
+  border-radius: 0.375rem;
+  background-color: #0108b8;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+  transition: opacity 0.15s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+}
+
+.btn-secondary {
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #081636;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: #f9fafb;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+}
+
+.input-hinza {
+  width: 100%;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  color: #081636;
+  box-shadow: inset 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+
+.input-hinza:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow:
+    inset 0 2px 4px rgba(37, 99, 235, 0.25),
+    0 0 0 1px #3b82f6;
+}
+
+.card-hinza {
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  box-shadow:
+    0 4px 6px -1px rgba(37, 99, 235, 0.25),
+    0 2px 4px -2px rgba(37, 99, 235, 0.25);
+}

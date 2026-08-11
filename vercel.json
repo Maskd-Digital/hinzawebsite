@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/complain",
+      "destination": "https://hinza-qr-intake.vercel.app/complain"
+    },
+    {
+      "source": "/complain/:path*",
+      "destination": "https://hinza-qr-intake.vercel.app/complain/:path*"
+    }
+  ]
+}
