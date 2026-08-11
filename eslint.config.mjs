@@ -10,6 +10,6 @@ const compat = new FlatCompat({
 });
 
 export default [
-  { ignores: ["node_modules/**", ".next/**", "out/**"] },
+  { ignores: ["node_modules/**", ".next/**", "out/**", "hinza-public/**"] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
