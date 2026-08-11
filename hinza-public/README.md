@@ -59,7 +59,7 @@ Served under Next.js `basePath: '/complain'`:
 
 ## Deploy (Vercel, path-mounted on marketing domain)
 
-1. Create a Vercel project with **Root Directory** `Hinza Public`.
+1. Create a Vercel project with **Root Directory** `hinza-public`.
 2. Set production env `NEXT_PUBLIC_APP_URL=https://hinza.app/complain` (plus existing Supabase vars).
 3. Do **not** attach `hinza.app` to this project — the marketing site on `hinza.app` proxies `/complain/*` to this deployment (see root `vercel.json`).
 4. Confirm the rewrite destination host matches this project’s `*.vercel.app` hostname (default in repo: `hinza-qr-intake.vercel.app`).
